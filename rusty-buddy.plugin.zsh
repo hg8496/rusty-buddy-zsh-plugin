@@ -1,9 +1,7 @@
 # oh-my-zsh plugin for rusty-buddy
 
-# Function to send input to rusty-buddy chat as a one-shot command
 function rbco() {
     local input="$*"
-    # Send the evaluated input as a one-shot chat
     rusty-buddy chat --one-shot "$input"
 }
 
@@ -15,7 +13,7 @@ function rb-batch() {
     done
 }
 
-# Ensure rust-buddy is accessible in PATH
+# Ensure rusty-buddy is accessible in PATH
 if ! command -v rusty-buddy >/dev/null; then
     echo "Please ensure rusty-buddy is installed and accessible in your PATH."
     return
@@ -31,12 +29,21 @@ alias rb-listp="rusty-buddy --list-personas"
 alias rbcd="rusty-buddy chat -d ."
 alias rbc="rusty-buddy chat"
 
-# If the completion file doesn't exist yet, we need to autoload it and
-# bind it to `kubectl`. Otherwise, compinit will have already done that.
+# Additional commands with options
+alias rb-ki="rusty-buddy knowledge init --persona"
+alias rb-ks="rusty-buddy knowledge search"
+alias rb-kad="rusty-buddy knowledge add --dir"
+alias rb-kaf="rusty-buddy knowledge add --file"
+alias rb-kau="rusty-buddy knowledge add --url"
+
+# Alias to fetch knowledge before a one-shot chat
+alias rbc-knowledge="rusty-buddy chat --knowledge"
+
+# Modified completion handling
 if [[ ! -f "$ZSH_CACHE_DIR/completions/_rusty" ]]; then
     typeset -g -A _comps
     autoload -Uz _rusty
-    _comps[kubectl]=_rusty
+    _comps[rusty-buddy]=_rusty
 fi
 
 rusty-buddy --completion zsh 2>/dev/null >|"$ZSH_CACHE_DIR/completions/_rusty" &|
